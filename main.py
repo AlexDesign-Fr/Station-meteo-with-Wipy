@@ -12,7 +12,7 @@ from MPL3115A2 import MPL3115A2,ALTITUDE,PRESSURE
 
 
 
-urlDomoticz = "http://192.168.0.17:80/json.htm"
+urlDomoticz = "http://<YourIpDomoticzServer>:80/json.htm"
 
 # ------------------------------------------------------------------------------
 # sensors data
@@ -35,6 +35,7 @@ else:
 
 
 def sendTemperatur():
+    # send data to pybytes
     pybytes.send_signal(1, si.temperature())
     pybytes.send_signal(2, si.humidity())
     pybytes.send_signal(3, si.dew_point())
@@ -45,7 +46,11 @@ def sendTemperatur():
 def sendLight():
     light = lt.light()
     lightResult = (int(light[0]) + int(light[1])) / 2
+    
+    # send data to pybytes
     pybytes.send_signal(4, lightResult)
+    
+    # send data to Domoticz
     Requete = urequests.get(urlDomoticz, { "type":"command",
                                             "param":"udevice",
                                             "idx":276,
